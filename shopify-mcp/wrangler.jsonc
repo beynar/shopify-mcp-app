@@ -1,0 +1,56 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "shopify-admin-mcp-dev",
+	"account_id": "6886250e2aff0047919a1ed731a55c64",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-01-12",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"observability": {
+		"logs": {
+			"enabled": true
+		},
+		"traces": {
+			"enabled": true
+		}
+	},
+	"assets": {
+		"binding": "ASSETS",
+		"directory": "./assets"
+	},
+	"worker_loaders": [
+		{
+			"binding": "LOADER"
+		}
+	],
+	"dev": {
+		"port": 2529
+	},
+	"env": {
+		"staging": {
+			"name": "shopify-admin-mcp-staging",
+			"worker_loaders": [
+				{
+					"binding": "LOADER"
+				}
+			]
+		},
+		"production": {
+			"name": "shopify-admin-mcp",
+			"worker_loaders": [
+				{
+					"binding": "LOADER"
+				}
+			]
+		},
+		"beynar": {
+			"name": "mcp-shopify-test",
+			"worker_loaders": [
+				{
+					"binding": "LOADER"
+				}
+			]
+		}
+	}
+}

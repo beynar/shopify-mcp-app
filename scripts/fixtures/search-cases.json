@@ -1,0 +1,135 @@
+[
+  {
+    "label": "exact shopifyql query",
+    "term": "shopifyqlQuery",
+    "expectedPath": "shopify-graphql/queries/shopifyqlQuery.md",
+    "maxRank": 1,
+    "requiredSnippets": ["Keyword Order", "GraphQL Integration", "MATCHES Semi-Joins"]
+  },
+  {
+    "label": "analytics language",
+    "term": "shopify analytics query language",
+    "expectedPath": "shopify-graphql/queries/shopifyqlQuery.md",
+    "maxRank": 1,
+    "requiredSnippets": ["Datasets", "Visualization Types", "Common Mistakes"]
+  },
+  {
+    "label": "customer segmentation",
+    "term": "shopify customer segmentation query",
+    "expectedPath": "shopify-graphql/queries/shopifyqlQuery.md",
+    "maxRank": 1,
+    "requiredSnippets": ["Segment Query Language", "Common Segment Patterns"]
+  },
+  {
+    "label": "sales analytics",
+    "term": "sales analytics reports",
+    "expectedPath": "shopify-graphql/queries/shopifyqlQuery.md",
+    "maxRank": 1,
+    "requiredSnippets": ["sales", "Time Filtering", "GraphQL Integration"]
+  },
+  {
+    "label": "shopifyql syntax",
+    "term": "shopifyql syntax from show where since group by",
+    "expectedPath": "shopify-graphql/queries/shopifyqlQuery.md",
+    "maxRank": 1,
+    "requiredSnippets": ["Keyword Order", "WHERE Clause"]
+  },
+  {
+    "label": "timeseries analytics",
+    "term": "shopifyql timeseries sales by day",
+    "expectedPath": "shopify-graphql/queries/shopifyqlQuery.md",
+    "maxRank": 1,
+    "requiredSnippets": ["TIMESERIES", "Time Filtering"]
+  },
+  {
+    "label": "visualize line chart",
+    "term": "shopifyql visualize line chart analytics",
+    "expectedPath": "shopify-graphql/queries/shopifyqlQuery.md",
+    "maxRank": 1,
+    "requiredSnippets": ["Visualization Types"]
+  },
+  {
+    "label": "matches operator",
+    "term": "shopifyql matches products purchased customers",
+    "expectedPath": "shopify-graphql/queries/shopifyqlQuery.md",
+    "maxRank": 1,
+    "requiredSnippets": ["MATCHES Semi-Joins", "products_purchased"]
+  },
+  {
+    "label": "segment syntax",
+    "term": "shopify segment query language where only",
+    "expectedPath": "shopify-graphql/queries/shopifyqlQuery.md",
+    "maxRank": 1,
+    "requiredSnippets": ["Segment Query Language"]
+  },
+  {
+    "label": "compare previous year",
+    "term": "shopifyql compare to previous year percent change",
+    "expectedPath": "shopify-graphql/queries/shopifyqlQuery.md",
+    "maxRank": 1,
+    "requiredSnippets": ["COMPARE TO", "PERCENT_CHANGE"]
+  },
+  {
+    "label": "graphql wrapper contract",
+    "term": "shopifyql graphql tableData parseErrors rows strings",
+    "expectedPath": "shopify-graphql/queries/shopifyqlQuery.md",
+    "maxRank": 1,
+    "requiredSnippets": ["GraphQL Integration", "parseErrors", "rows"]
+  },
+  {
+    "label": "datasets reference",
+    "term": "shopifyql datasets sales customers products sessions",
+    "expectedPath": "shopify-graphql/queries/shopifyqlQuery.md",
+    "maxRank": 1,
+    "requiredSnippets": ["Datasets", "sales", "customers", "products", "sessions"]
+  },
+  {
+    "label": "read reports scope",
+    "term": "shopifyql read_reports scope analytics query",
+    "expectedPath": "shopify-graphql/queries/shopifyqlQuery.md",
+    "maxRank": 1,
+    "requiredSnippets": ["Required scope"]
+  },
+  {
+    "label": "customer segment members overlap",
+    "term": "customer segment members query",
+    "expectedPath": "shopify-graphql/queries/customerSegmentMembersQuery.md",
+    "maxRank": 1,
+    "requiredSnippets": ["Arguments"]
+  },
+  {
+    "label": "install app action alias",
+    "term": "install app",
+    "expectedPath": "shopify-graphql/queries/appInstallations.md",
+    "maxRank": 1,
+    "requiredSnippets": ["Arguments"]
+  },
+  {
+    "label": "discount code action alias",
+    "term": "create discount code",
+    "expectedPath": "shopify-graphql/mutations/discountCodeBasicCreate.md",
+    "maxRank": 3,
+    "requiredSnippets": ["Arguments"]
+  },
+  {
+    "label": "subscription avoids apple pollution",
+    "term": "subscription",
+    "expectedPath": "shopify-graphql/references/subscriptions.md",
+    "maxRank": 3,
+    "requiredSnippets": []
+  },
+  {
+    "label": "ambiguous reports phrase",
+    "term": "shopify reports query sales by month",
+    "expectedPath": "shopify-graphql/queries/shopifyqlQuery.md",
+    "maxRank": 3,
+    "requiredSnippets": ["GraphQL Integration", "Time Filtering"]
+  },
+  {
+    "label": "analytics visualization heatmap",
+    "term": "shopifyql heatmap hour of day day of week",
+    "expectedPath": "shopify-graphql/queries/shopifyqlQuery.md",
+    "maxRank": 1,
+    "requiredSnippets": ["Visualization Types"]
+  }
+]

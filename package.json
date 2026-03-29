@@ -1,0 +1,84 @@
+{
+  "name": "mcp",
+  "private": true,
+  "author": "arnaud",
+  "workspaces": {
+    "packages": [
+      "extensions/*"
+    ]
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsx shopify-mcp/scripts/build-search-assets.ts && react-router build && tsx scripts/copy-mcp-assets.ts",
+    "dev": "shopify app dev",
+    "config:link": "shopify app config link",
+    "generate": "shopify app generate",
+    "deploy": "shopify app deploy",
+    "deploy:worker": "npm run build && wrangler deploy",
+    "config:use": "shopify app config use",
+    "env": "shopify app env",
+    "start": "wrangler dev --persist-to .wrangler/state",
+    "setup": "npm run db:push:remote",
+    "lint": "oxlint --tsconfig tsconfig.json .",
+    "lint:fix": "oxlint --tsconfig tsconfig.json --fix .",
+    "shopify": "shopify",
+    "db:schema:push:local": "tsx scripts/db-push-local.ts",
+    "db:schema:push:remote": "drizzle-kit push",
+    "db:migrate:mcp:local": "tsx scripts/migrate-mcp-connection.ts --local",
+    "db:migrate:mcp:remote": "tsx scripts/migrate-mcp-connection.ts --remote",
+    "db:push:local": "npm run db:schema:push:local && npm run db:migrate:mcp:local",
+    "db:push:remote": "npm run db:schema:push:remote && npm run db:migrate:mcp:remote",
+    "db:studio": "drizzle-kit studio",
+    "format": "oxfmt . --write",
+    "format:check": "oxfmt . --check",
+    "graphql-codegen": "graphql-codegen",
+    "search:test": "bun run scripts/test-search.ts",
+    "test": "tsx --test app/**/*.test.ts",
+    "vite": "vite",
+    "typecheck": "react-router typegen && tsc --noEmit"
+  },
+  "dependencies": {
+    "@cloudflare/workers-oauth-provider": "^0.3.1",
+    "@react-router/cloudflare": "^7.13.1",
+    "@react-router/dev": "^7.12.0",
+    "@react-router/fs-routes": "^7.12.0",
+    "@shopify/app-bridge-react": "^4.2.4",
+    "@shopify/shopify-app-react-router": "^1.1.0",
+    "dotenv": "^16.6.1",
+    "drizzle-orm": "^0.45.1",
+    "hono": "^4.12.3",
+    "isbot": "^5.1.31",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router": "^7.12.0",
+    "vite-tsconfig-paths": "^5.1.4",
+    "zod": "4.3.6"
+  },
+  "devDependencies": {
+    "@shopify/api-codegen-preset": "^1.2.0",
+    "@shopify/polaris-types": "1.0.1",
+    "@types/node": "^22.18.8",
+    "@types/react": "^18.3.25",
+    "@types/react-dom": "^18.3.7",
+    "drizzle-kit": "^0.31.10",
+    "esbuild": "0.27.4",
+    "graphql-config": "^5.1.1",
+    "miniflare": "^4.20260317.1",
+    "oxfmt": "^0.41.0",
+    "oxlint": "^1.56.0",
+    "tailwindcss": "^4.2.2",
+    "tsx": "^4.20.3",
+    "typescript": "^5.9.3",
+    "vite": "^6.3.6",
+    "wrangler": "^4.76.0"
+  },
+  "overrides": {
+    "p-map": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=20.19 <22 || >=22.12"
+  },
+  "trustedDependencies": [
+    "@shopify/plugin-cloudflare"
+  ]
+}

@@ -1,0 +1,283 @@
+{
+  "overview": {
+    "queryField": "shopifyqlQuery",
+    "requiredScope": "read_reports",
+    "responseShape": [
+      "parseErrors",
+      "tableData.columns",
+      "tableData.rows"
+    ],
+    "notes": [
+      "Verified against harmony-nutri-dev.myshopify.com on the Basic plan with Admin API version 2026-04.",
+      "Pass the ShopifyQL query through the GraphQL $q variable.",
+      "Check parseErrors before trusting tableData.",
+      "Rows are objects keyed by column name.",
+      "Metrics are pre-aggregated; do not wrap them in sum(), count(), or avg().",
+      "VISUALIZE is not supported through the GraphQL API."
+    ]
+  },
+  "datasets": {
+    "sales": {
+      "description": "Default analytics dataset on Basic. Use for revenue, orders, customer counts, product analytics, and most report-style questions.",
+      "metrics": [
+        "total_sales",
+        "net_sales",
+        "gross_sales",
+        "gross_profit",
+        "orders",
+        "customers",
+        "new_customers",
+        "returning_customers",
+        "average_order_value",
+        "returns",
+        "discounts",
+        "taxes",
+        "tips"
+      ],
+      "dimensions": [
+        "product_title",
+        "product_type",
+        "product_vendor",
+        "product_id",
+        "product_tag",
+        "billing_country",
+        "billing_region",
+        "shipping_country",
+        "shipping_region",
+        "discount_code",
+        "sales_channel",
+        "pos_location_name",
+        "order_name",
+        "shop_name",
+        "shop_id",
+        "second",
+        "minute",
+        "hour",
+        "day",
+        "week",
+        "month",
+        "quarter",
+        "year",
+        "hour_of_day",
+        "day_of_week",
+        "week_of_year",
+        "month_of_year"
+      ]
+    },
+    "sessions": {
+      "description": "Traffic and attribution dataset on Basic.",
+      "metrics": [
+        "sessions",
+        "conversion_rate",
+        "bounce_rate",
+        "average_session_duration"
+      ],
+      "dimensions": [
+        "referrer_source",
+        "referrer_name",
+        "referrer_path",
+        "landing_page_path",
+        "utm_campaign",
+        "utm_source",
+        "utm_medium",
+        "utm_content",
+        "utm_term",
+        "second",
+        "minute",
+        "hour",
+        "day",
+        "week",
+        "month",
+        "quarter",
+        "year",
+        "hour_of_day",
+        "day_of_week",
+        "week_of_year",
+        "month_of_year"
+      ]
+    },
+    "customers": {
+      "description": "Customer listing and spend analytics. More constrained than sales on Basic. customer_email must appear in GROUP BY when grouping by other dimensions.",
+      "metrics": [
+        "total_amount_spent"
+      ],
+      "dimensions": [
+        "customer_email",
+        "customer_id",
+        "customer_name",
+        "customer_tag",
+        "customer_language",
+        "customer_country",
+        "customer_region",
+        "customer_city",
+        "customer_account_status",
+        "day",
+        "month"
+      ]
+    },
+    "payment_attempts": {
+      "description": "Very limited on Basic but partially usable.",
+      "metrics": [
+        "successful_payments"
+      ],
+      "dimensions": [
+        "payment_method",
+        "day",
+        "month"
+      ]
+    },
+    "inventory": {
+      "description": "Accepted as a dataset target but no working metrics were verified on Basic. Treat as unavailable for practical reporting.",
+      "metrics": [],
+      "dimensions": [
+        "product_title",
+        "product_type",
+        "product_vendor",
+        "product_id"
+      ]
+    }
+  },
+  "topics": [
+    {
+      "id": "overview",
+      "title": "Verified ShopifyQL overview",
+      "description": "ShopifyQL is an aggregated analytics language executed through the GraphQL shopifyqlQuery field. The GraphQL API does not support VISUALIZE.",
+      "category": "overview",
+      "keywords": [
+        "shopifyql",
+        "analytics",
+        "reports",
+        "shopifyqlQuery",
+        "parseErrors",
+        "tableData",
+        "graphl variable q",
+        "pre aggregated metrics"
+      ]
+    },
+    {
+      "id": "keyword-order",
+      "title": "Verified keyword order",
+      "description": "Use FROM then SHOW, then WHERE, GROUP BY, TIMESERIES, SINCE, UNTIL, DURING, COMPARE TO, HAVING, ORDER BY, LIMIT, WITH.",
+      "category": "keyword-order",
+      "keywords": [
+        "from",
+        "show",
+        "where",
+        "group by",
+        "timeseries",
+        "since",
+        "until",
+        "during",
+        "compare to",
+        "having",
+        "order by",
+        "limit",
+        "with"
+      ]
+    },
+    {
+      "id": "time-filtering",
+      "title": "Time filtering",
+      "description": "Use SINCE and UNTIL for relative or absolute dates, DURING for named ranges, and COMPARE TO for period comparisons.",
+      "category": "time-filter",
+      "keywords": [
+        "since",
+        "until",
+        "during",
+        "today",
+        "yesterday",
+        "last_month",
+        "this_week",
+        "compare to",
+        "previous_period",
+        "last_year"
+      ]
+    },
+    {
+      "id": "invalid-datasets",
+      "title": "Broken official-doc datasets",
+      "description": "On the tested Basic-plan GraphQL API, products and orders are not valid FROM datasets. Use sales for aggregate reporting instead.",
+      "category": "overview",
+      "keywords": [
+        "products dataset invalid",
+        "orders dataset invalid",
+        "returns dataset invalid",
+        "visits invalid",
+        "traffic invalid",
+        "marketing invalid",
+        "behaviors invalid",
+        "use sales instead"
+      ]
+    },
+    {
+      "id": "where-having",
+      "title": "WHERE and HAVING",
+      "description": "WHERE filters dimensions before aggregation. HAVING filters metrics after aggregation.",
+      "category": "keyword-order",
+      "keywords": [
+        "where dimensions only",
+        "having metrics",
+        "contains",
+        "starts with",
+        "ends with",
+        "single quotes"
+      ]
+    },
+    {
+      "id": "timeseries",
+      "title": "TIMESERIES",
+      "description": "TIMESERIES groups by time, replaces GROUP BY for the time dimension, and fills missing buckets with zeros.",
+      "category": "time-filter",
+      "keywords": [
+        "timeseries",
+        "day",
+        "week",
+        "month",
+        "gap filling",
+        "group by time"
+      ]
+    },
+    {
+      "id": "with-modifiers",
+      "title": "WITH modifiers",
+      "description": "Only one WITH clause is valid. Supported modifiers include TOTALS, GROUP_TOTALS, PERCENT_CHANGE, CUMULATIVE_VALUES, CURRENCY, and TIMEZONE.",
+      "category": "overview",
+      "keywords": [
+        "with totals",
+        "with group totals",
+        "with percent change",
+        "with cumulative values",
+        "with currency",
+        "with timezone",
+        "one with clause"
+      ]
+    },
+    {
+      "id": "metafields",
+      "title": "Metafields",
+      "description": "Metafields can be used in WHERE, GROUP BY, and SHOW with the format owner_type.metafields.namespace.key.",
+      "category": "overview",
+      "keywords": [
+        "metafields",
+        "customer.metafields",
+        "order.metafields",
+        "product.metafields",
+        "product_variant.metafields"
+      ]
+    },
+    {
+      "id": "gotchas",
+      "title": "Critical gotchas",
+      "description": "SHOW * is invalid, metrics are pre-aggregated, many documented columns fail on Basic, and MATCHES is not usable in the tested Basic-plan GraphQL setup.",
+      "category": "overview",
+      "keywords": [
+        "show star invalid",
+        "sum count avg invalid",
+        "visualize unsupported",
+        "matches schema not matchable",
+        "broken columns",
+        "basic plan limitations"
+      ]
+    }
+  ]
+}
