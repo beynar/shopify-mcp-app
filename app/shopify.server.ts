@@ -51,22 +51,22 @@ export const addDocumentResponseHeaders = (
   ...args: Parameters<ReturnType<typeof getShopify>["addDocumentResponseHeaders"]>
 ) => getShopify().addDocumentResponseHeaders(...args);
 
-export const authenticate: ReturnType<typeof getShopify>["authenticate"] = {
+export const authenticate = {
   admin: ((...args: any[]) => (getShopify().authenticate.admin as any).apply(null, args)) as any,
   flow: ((...args: any[]) => (getShopify().authenticate.flow as any).apply(null, args)) as any,
   fulfillmentService: ((...args: any[]) =>
     (getShopify().authenticate.fulfillmentService as any).apply(null, args)) as any,
   pos: ((...args: any[]) => (getShopify().authenticate.pos as any).apply(null, args)) as any,
-  public: getShopify().authenticate.public,
+  public: ((...args: any[]) => (getShopify().authenticate.public as any).apply(null, args)) as any,
   webhook: ((...args: any[]) =>
     (getShopify().authenticate.webhook as any).apply(null, args)) as any,
-};
+} satisfies ReturnType<typeof getShopify>["authenticate"];
 
-export const unauthenticated: ReturnType<typeof getShopify>["unauthenticated"] = {
+export const unauthenticated = {
   admin: ((...args: any[]) => (getShopify().unauthenticated.admin as any).apply(null, args)) as any,
   storefront: ((...args: any[]) =>
     (getShopify().unauthenticated.storefront as any).apply(null, args)) as any,
-};
+} satisfies ReturnType<typeof getShopify>["unauthenticated"];
 
 export const login = (...args: Parameters<ReturnType<typeof getShopify>["login"]>) =>
   getShopify().login(...args);
