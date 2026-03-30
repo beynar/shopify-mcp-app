@@ -194,7 +194,7 @@ export function createHttpDb(credentials = getCloudflareD1Config()) {
 }
 
 function shouldUseBinding(env: RuntimeEnv) {
-  return env.NODE_ENV !== "production" && (Boolean(env.DB) || Boolean(env.CLOUDFLARE_DATABASE_ID));
+  return Boolean(env.DB) || (env.NODE_ENV !== "production" && Boolean(env.CLOUDFLARE_DATABASE_ID));
 }
 
 export function resolveDbStrategy(env = getRuntimeEnv()): DbStrategy {

@@ -19,6 +19,66 @@ It uses a hybrid D1 model:
 The schema source of truth is [app/db/schema.ts](/Users/arnaud/code/mcp-shopify-app/app-test/app/db/schema.ts).
 Normal database workflow is push-only. Do not treat generated migration files as part of the day-to-day flow.
 
+## Repeatable New Store Playbook
+
+Use this repo with the following operating model:
+
+- keep the repo private
+- create one new Shopify app per store/app install target
+- create one new Cloudflare Worker deployment per Shopify app
+- manage Shopify app settings in Partner Dashboard
+- reuse one stable Cloudflare D1 database binding across deployments unless you intentionally need isolation
+
+Important constraint:
+
+- one deployed Worker runtime supports one Shopify app identity
+- if you create another Shopify app, the simple path is another Worker deployment with that app's credentials
+- you do not need a new D1 database for every store; the normal path is to keep one stable D1 binding and reuse its ID
+
+### Partner Dashboard values
+
+App URL:
+
+```text
+https://mcp.nowmade.site
+```
+
+Redirect URL:
+
+```text
+https://mcp.nowmade.site/auth/callback
+```
+
+Scopes:
+
+```text
+read_assigned_fulfillment_orders,write_assigned_fulfillment_orders,read_merchant_managed_fulfillment_orders,write_merchant_managed_fulfillment_orders,read_third_party_fulfillment_orders,write_third_party_fulfillment_orders,read_cart_transforms,write_cart_transforms,read_checkout_branding_settings,write_checkout_branding_settings,read_content,write_content,read_online_store_pages,read_customer_events,write_pixels,read_customer_merge,write_customer_merge,read_customers,write_customers,read_delivery_customizations,write_delivery_customizations,read_discounts,write_discounts,read_draft_orders,write_draft_orders,read_files,write_files,read_fulfillments,write_fulfillments,read_gift_cards,write_gift_cards,read_inventory,write_inventory,read_legal_policies,read_locales,write_locales,read_locations,write_locations,read_markets,write_markets,read_marketing_events,write_marketing_events,read_metaobject_definitions,write_metaobject_definitions,read_metaobjects,write_metaobjects,read_online_store_navigation,write_online_store_navigation,read_order_edits,write_order_edits,read_orders,write_orders,read_payment_customizations,write_payment_customizations,read_payment_terms,write_payment_terms,read_price_rules,write_price_rules,read_privacy_settings,write_privacy_settings,read_products,write_products,read_purchase_options,write_purchase_options,read_reports,read_returns,write_returns,read_script_tags,write_script_tags,read_shipping,write_shipping,read_shopify_payments_disputes,read_shopify_payments_payouts,read_store_credit_accounts,read_store_credit_account_transactions,write_store_credit_account_transactions,read_themes,write_themes,read_translations,write_translations,read_validations,write_validations,write_app_proxy
+```
+
+### Steps
+
+1. Create a brand-new Shopify app in Partner Dashboard.
+2. Create a brand-new Cloudflare Worker deployment for that app.
+3. Reuse the existing stable D1 binding and database ID for that deployment.
+4. Set Worker secrets for that deployment:
+   - `SHOPIFY_API_KEY`
+   - `SHOPIFY_API_SECRET`
+   - `SHOPIFY_APP_URL`
+   - `CLOUDFLARE_D1_TOKEN` only if you also run remote D1 HTTP tooling from that environment
+5. Deploy the Worker:
+
+```bash
+npm run deploy:worker
+```
+
+6. In Partner Dashboard, set:
+   - App URL
+   - Redirect URL: `/auth/callback`
+   - mandatory compliance webhooks
+   - scopes
+   - privacy policy URL
+7. Install that app on the target store.
+
 ## Architecture
 
 At a high level:
@@ -137,12 +197,17 @@ Worker vars in [wrangler.jsonc](/Users/arnaud/code/mcp-shopify-app/app-test/wran
 - `CLOUDFLARE_DATABASE_ID`
 - `SCOPES`
 
-Worker secrets:
+Worker secrets used by the deployed app runtime:
 
 - `SHOPIFY_API_KEY`
 - `SHOPIFY_API_SECRET`
 - `SHOPIFY_APP_URL`
+
+Optional Worker secret for remote D1 HTTP tooling only:
+
 - `CLOUDFLARE_D1_TOKEN`
+
+The deployed Worker app code uses the `DB` binding when it is available, including in production. The D1 token is still useful for Drizzle Kit and other remote HTTP database tooling.
 
 Do not commit secrets to the repo.
 
@@ -235,6 +300,7 @@ Recommended operating model for this repo:
 - create one new Shopify app per store/app install target
 - create one new Cloudflare Worker deployment per Shopify app
 - configure the Shopify app in Partner Dashboard instead of maintaining a new local `shopify.app.*.toml` file for every app
+- reuse the stable D1 binding and database ID across deployments unless you explicitly want isolation
 
 In practice, each deployment gets its own:
 
@@ -242,6 +308,12 @@ In practice, each deployment gets its own:
 - Shopify app secret
 - Worker name / URL
 - Worker secrets
+
+Shared across deployments by default:
+
+- Cloudflare D1 database and binding
+- D1 schema
+- D1 HTTP token, if you are operating one shared environment for remote tooling
 
 Do not commit the Shopify app secret. Keep it only in local env and Cloudflare secrets.
 
@@ -257,6 +329,8 @@ Copy the database ID and update:
   `vars.CLOUDFLARE_DATABASE_ID`
 - local `.env`
   `CLOUDFLARE_DATABASE_ID`
+
+For normal multi-store usage of this repo, do this once and keep the same database ID stable across store-specific Worker deployments.
 
 ### 5. Configure Wrangler local binding metadata
 
@@ -296,13 +370,18 @@ npm run db:push:remote
 
 ### 8. First Worker deploy
 
-Set secrets:
+Set runtime secrets:
 
 ```bash
 printf '%s' 'your-shopify-api-key' | npx wrangler secret put SHOPIFY_API_KEY
 printf '%s' 'your-shopify-api-secret' | npx wrangler secret put SHOPIFY_API_SECRET
-printf '%s' 'your-d1-http-token' | npx wrangler secret put CLOUDFLARE_D1_TOKEN
 printf '%s' 'https://your-worker-url.workers.dev' | npx wrangler secret put SHOPIFY_APP_URL
+```
+
+If you also want to run remote D1 HTTP tooling from that environment, set:
+
+```bash
+printf '%s' 'your-d1-http-token' | npx wrangler secret put CLOUDFLARE_D1_TOKEN
 ```
 
 Deploy:
@@ -323,37 +402,6 @@ Once the Worker is live, update the Shopify app manually in Partner Dashboard:
 
 This repo does not need a new Shopify TOML file for every duplicated app if you choose to manage those settings directly in the dashboard.
 
-## Repeatable New Store Playbook
-
-When you want to install this code on another store, the simplest flow is:
-
-1. Create a brand-new Shopify app in Partner Dashboard.
-2. Create a brand-new Cloudflare Worker deployment for that app.
-3. Create or bind a fresh D1 database for that deployment if you want full isolation.
-4. Set Worker secrets for that deployment:
-   - `SHOPIFY_API_KEY`
-   - `SHOPIFY_API_SECRET`
-   - `SHOPIFY_APP_URL`
-   - `CLOUDFLARE_D1_TOKEN`
-5. Deploy the Worker:
-
-```bash
-npm run deploy:worker
-```
-
-6. In Partner Dashboard, set:
-   - App URL
-   - Redirect URL: `/auth/callback`
-   - mandatory compliance webhooks
-   - scopes
-   - privacy policy URL
-7. Install that app on the target store.
-
-Important constraint:
-
-- one deployed Worker runtime supports one Shopify app identity
-- if you create another Shopify app, the simple path is another Worker deployment with that app's credentials
-
 ## Tooling Baseline
 
 This starter uses:
@@ -371,24 +419,4 @@ npm run lint
 npm run format:check
 npm run typecheck
 npm test
-```
-
-## Current Production Shopify Settings
-
-Current production Shopify app URL:
-
-```text
-https://mcp.nowmade.site
-```
-
-Current production redirect URL:
-
-```text
-https://mcp.nowmade.site/auth/callback
-```
-
-Current production scopes:
-
-```text
-read_assigned_fulfillment_orders,write_assigned_fulfillment_orders,read_merchant_managed_fulfillment_orders,write_merchant_managed_fulfillment_orders,read_third_party_fulfillment_orders,write_third_party_fulfillment_orders,read_cart_transforms,write_cart_transforms,read_checkout_branding_settings,write_checkout_branding_settings,read_content,write_content,read_online_store_pages,read_customer_events,write_pixels,read_customer_merge,write_customer_merge,read_customers,write_customers,read_delivery_customizations,write_delivery_customizations,read_discounts,write_discounts,read_draft_orders,write_draft_orders,read_files,write_files,read_fulfillments,write_fulfillments,read_gift_cards,write_gift_cards,read_inventory,write_inventory,read_legal_policies,read_locales,write_locales,read_locations,write_locations,read_markets,write_markets,read_marketing_events,write_marketing_events,read_metaobject_definitions,write_metaobject_definitions,read_metaobjects,write_metaobjects,read_online_store_navigation,write_online_store_navigation,read_order_edits,write_order_edits,read_orders,write_orders,read_payment_customizations,write_payment_customizations,read_payment_terms,write_payment_terms,read_price_rules,write_price_rules,read_privacy_settings,write_privacy_settings,read_products,write_products,read_purchase_options,write_purchase_options,read_reports,read_returns,write_returns,read_script_tags,write_script_tags,read_shipping,write_shipping,read_shopify_payments_disputes,read_shopify_payments_payouts,read_store_credit_accounts,read_store_credit_account_transactions,write_store_credit_account_transactions,read_themes,write_themes,read_translations,write_translations,read_validations,write_validations,write_app_proxy
 ```

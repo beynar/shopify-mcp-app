@@ -10,7 +10,7 @@ import { createBindingDb, resetDbCache, resolveDbStrategy } from "./db.server";
 import { LOCAL_D1_BINDING_NAME } from "./db/local-config";
 import * as schema from "./db/schema";
 
-test("resolveDbStrategy prefers a local binding outside production", () => {
+test("resolveDbStrategy prefers a bound D1 database in production", () => {
   const fakeBinding = {
     prepare() {
       throw new Error("not used");
@@ -26,7 +26,29 @@ test("resolveDbStrategy prefers a local binding outside production", () => {
       CLOUDFLARE_DATABASE_ID: "database",
       CLOUDFLARE_D1_TOKEN: "token",
     }),
+    "binding",
+  );
+});
+
+test("resolveDbStrategy falls back to http in production without a binding", () => {
+  assert.equal(
+    resolveDbStrategy({
+      NODE_ENV: "production",
+      CLOUDFLARE_ACCOUNT_ID: "account",
+      CLOUDFLARE_DATABASE_ID: "database",
+      CLOUDFLARE_D1_TOKEN: "token",
+    }),
     "http",
+  );
+});
+
+test("resolveDbStrategy uses a local binding in development when only the database id is present", () => {
+  assert.equal(
+    resolveDbStrategy({
+      NODE_ENV: "development",
+      CLOUDFLARE_DATABASE_ID: "database",
+    }),
+    "binding",
   );
 });
 
