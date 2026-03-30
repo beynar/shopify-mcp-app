@@ -38,7 +38,9 @@ export async function hashIdentifier(value: string) {
 
 function decodeHex(value: string) {
   if (!/^[a-f0-9]{64}$/i.test(value)) {
-    throw new Error("MCP_SECRET_ENCRYPTION_KEY must be a 64-character hex string.");
+    throw new Error(
+      "MCP_SECRET_ENCRYPTION_KEY must be a 64-character hex string. Generate one with `openssl rand -hex 32` and set it as a Worker secret.",
+    );
   }
 
   const bytes = new Uint8Array(value.length / 2);
