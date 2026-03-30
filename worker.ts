@@ -1,8 +1,7 @@
 import { WorkerEntrypoint } from "cloudflare:workers";
 import { OAuthProvider } from "@cloudflare/workers-oauth-provider";
 import { createRequestHandler } from "@react-router/cloudflare";
-// @ts-expect-error Vendored Hono runtime from the embedded shopify-mcp package.
-import { Hono } from "./shopify-mcp/node_modules/hono/dist/hono.js";
+import { Hono } from "hono";
 import { requireEnv, setRuntimeEnv } from "./app/env.server";
 import { buildMcpUrl, handleAuthorizedMcpRequest, type McpOAuthGrantProps, type WorkerEnv } from "./app/mcp.server";
 import { authenticate, sessionStorage } from "./app/shopify.server";
