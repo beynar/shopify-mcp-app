@@ -41,10 +41,6 @@ function getEnvStore(): RuntimeEnv {
   return globalThis.__appRuntimeEnv;
 }
 
-function canReadNodeProcessEnv() {
-  return typeof process !== "undefined" && process.release?.name === "node";
-}
-
 export function setRuntimeEnv(env: Record<string, unknown>) {
   const nextValues = Object.fromEntries(
     ENV_KEYS.flatMap((key) => {
@@ -62,18 +58,7 @@ export function setRuntimeEnv(env: Record<string, unknown>) {
 
 export function getRuntimeEnv(): RuntimeEnv {
   const store = getEnvStore();
-  const resolved: RuntimeEnv = { ...store };
-  const resolvedStrings = resolved as Record<EnvKey, string | undefined>;
-
-  if (canReadNodeProcessEnv()) {
-    for (const key of ENV_KEYS) {
-      if (!resolvedStrings[key] && process.env[key]) {
-        resolvedStrings[key] = process.env[key];
-      }
-    }
-  }
-
-  return resolved;
+  return { ...store };
 }
 
 function isD1Database(value: unknown): value is D1Database {

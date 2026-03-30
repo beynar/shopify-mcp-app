@@ -2,7 +2,7 @@ import { WorkerEntrypoint } from "cloudflare:workers";
 import { OAuthProvider } from "@cloudflare/workers-oauth-provider";
 import { createRequestHandler } from "@react-router/cloudflare";
 import { Hono } from "hono";
-import { requireEnv, setRuntimeEnv } from "./app/env.server";
+import { getRuntimeEnv, requireEnv, setRuntimeEnv } from "./app/env.server";
 import { buildMcpUrl, handleAuthorizedMcpRequest, type McpOAuthGrantProps, type WorkerEnv } from "./app/mcp.server";
 import { authenticate, sessionStorage } from "./app/shopify.server";
 import {
@@ -34,7 +34,7 @@ async function getRequestHandler() {
 
       return createRequestHandler<WorkerEnv>({
         build: build as any,
-        mode: process.env.NODE_ENV,
+        mode: getRuntimeEnv().NODE_ENV,
         getLoadContext({ context }) {
           setRuntimeEnv(context.cloudflare.env);
           return {
