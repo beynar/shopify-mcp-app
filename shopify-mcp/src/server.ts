@@ -275,6 +275,7 @@ Runtime Constraints:
 - Use GraphQL variables for any query containing inner quotes or special characters. Do NOT try to embed ShopifyQL queries, search filters like created_at:>2026-04-01, or other quoted substrings directly inside a GraphQL query string. Instead, declare a variable in the query signature (for example $q: String!) and pass the value through the variables object.
 - Pagination pattern. For cursor-based pagination, declare $cursor: String (nullable) in the query signature and pass it via variables. On the first call, omit the cursor variable or pass null. Do not concatenate cursor values into the query string.
 - String concatenation inside query strings breaks silently. Never build GraphQL queries via "... " + variable + " ...". Always use GraphQL variables.
+- When generating code or templates that include multiline user-facing copy, do not write literal \\n sequences into the final text. Prefer arrays of lines joined with "\\n", for example ["Line 1", "Line 2"].join("\\n"). Second choice: use a template literal in the generated output only if the target language/file supports it. The tool code you send here must still use double-quoted strings.
 
 Example pagination:
 async () => {

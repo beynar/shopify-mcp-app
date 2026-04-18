@@ -64,7 +64,6 @@ read_assigned_fulfillment_orders,write_assigned_fulfillment_orders,read_merchant
    - `SHOPIFY_API_KEY`
    - `SHOPIFY_API_SECRET`
    - `SHOPIFY_APP_URL`
-   - `MCP_SECRET_ENCRYPTION_KEY` or rely on the default in `wrangler.jsonc`
    - `CLOUDFLARE_D1_TOKEN` only if you also run remote D1 HTTP tooling from that environment
 5. Deploy the Worker:
 
@@ -165,7 +164,6 @@ These are needed locally:
 - `SHOPIFY_API_KEY`
 - `SHOPIFY_API_SECRET`
 - `SHOPIFY_APP_URL`
-- `MCP_SECRET_ENCRYPTION_KEY`
 - `SCOPES`
 - `SHOP_CUSTOM_DOMAIN` optional
 - `CLOUDFLARE_ACCOUNT_ID`
@@ -179,7 +177,6 @@ Example:
 SHOPIFY_API_KEY=...
 SHOPIFY_API_SECRET=...
 SHOPIFY_APP_URL=https://your-dev-url.example.com
-MCP_SECRET_ENCRYPTION_KEY=f44d9c6e331d91cc856aeadf5bcb6681c7d2c5c35255c83b0dd104f96a7f87c8
 SCOPES=read_content,write_content,read_metaobject_definitions,read_metaobjects,read_products,write_metaobject_definitions,write_metaobjects,write_products
 SHOP_CUSTOM_DOMAIN=
 
@@ -211,8 +208,6 @@ Optional Worker secret for remote D1 HTTP tooling only:
 - `CLOUDFLARE_D1_TOKEN`
 
 The deployed Worker app code uses the `DB` binding when it is available, including in production. The D1 token is still useful for Drizzle Kit and other remote HTTP database tooling.
-
-`MCP_SECRET_ENCRYPTION_KEY` has a default internal value in [wrangler.jsonc](/Users/arnaud/code/shopify-mcp-app/wrangler.jsonc). You can override it with a Worker secret if you want a different key per deployment.
 
 Do not commit secrets to the repo.
 
