@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "shopify-mcp",
+  "name": "feroce-live-mcp",
   "keep_vars": true,
   "account_id": "96b47bfc0b6026d08a3b8a514df0be12",
   "main": "./worker.ts",
